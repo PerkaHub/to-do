@@ -9,19 +9,11 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_NAME: str
     ASYNC_DB_DRIVER: str
-    SYNC_DB_DRIVER: str
 
     @property
     def ASYNC_DATABASE_URL(self):
         return (
             f'{self.ASYNC_DB_DRIVER}://{self.DB_USER}:{self.DB_PASSWORD}'
-            f'@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
-        )
-
-    @property
-    def SYNC_DATABASE_URL(self):
-        return (
-            f'{self.SYNC_DB_DRIVER}://{self.DB_USER}:{self.DB_PASSWORD}'
             f'@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}'
         )
 
