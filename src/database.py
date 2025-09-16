@@ -10,7 +10,7 @@ from src.settings import settings
 
 
 engine = create_async_engine(
-    url=settings.get_db_url,
+    url=settings.ASYNC_DATABASE_URL,
     echo=True,
     echo_pool=True,
     future=True,
