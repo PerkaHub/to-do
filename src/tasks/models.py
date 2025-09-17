@@ -2,7 +2,7 @@ from enum import Enum
 from datetime import datetime, timezone
 
 from pydantic import EmailStr
-from sqlalchemy import CheckConstraint, Enum, ForeignKey
+from sqlalchemy import CheckConstraint, ForeignKey, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -34,10 +34,12 @@ class Task(Base):
         nullable=True,
     )
     status: Mapped[TaskStatus] = mapped_column(
+        SQLEnum(TaskStatus),
         default=TaskStatus.IN_PROGRESS,
         nullable=False,
     )
     priority: Mapped[TaskPriority] = mapped_column(
+        SQLEnum(TaskPriority),
         default=TaskPriority.MEDIUM,
         nullable=False,
     )
@@ -67,8 +69,10 @@ class Task(Base):
         index=True,
     )
 
-    user: Mapped['User'] = relationship(back_populates='tasks')
-    category: Mapped['Category | None'] = relationship(back_populates='tasks')
+    user: Mapped['User'] = relationship('User', lazy='joined', back_populates='tasks')
+    category: Mapped['Category | None'] = relationship(
+        'Category', back_populates='tasks'
+    )
 
     @hybrid_property
     def is_overdue(self) -> bool:
@@ -91,7 +95,7 @@ class Category(Base):
         nullable=False,
     )
 
-    tasks: Mapped[list['Task']] = relationship(back_populates='categories')
+    tasks: Mapped[list['Task']] = relationship('Task', back_populates='category')
 
     def __repr__(self) -> str:
         return f'<Category(id={self.id}, name="{self.name}")>'
