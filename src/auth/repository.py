@@ -3,4 +3,4 @@ from src.users.models import User
 
 
 class UserRepository(BaseRepository[User]):
-    pass
+    model = User

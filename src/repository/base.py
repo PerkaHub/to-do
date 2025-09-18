@@ -5,14 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 class BaseRepository[M]:
     model: type[M]
 
-    def __init_subclass__(cls, **kwargs):
-        super().__init_subclass__(**kwargs)
-        # Получаем generic-параметр из __orig_bases__
-        for base in cls.__orig_bases__:
-            if hasattr(base, '__args__') and base.__args__:
-                cls.model = base.__args__[0]
-                break
-
     @classmethod
     async def get_one_or_none(
         cls, session: AsyncSession, **filter_by
