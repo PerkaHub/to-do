@@ -1,8 +1,7 @@
 from enum import Enum
 from datetime import datetime, timezone
 
-from pydantic import EmailStr
-from sqlalchemy import CheckConstraint, ForeignKey, Enum as SQLEnum
+from sqlalchemy import ForeignKey, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -79,7 +78,10 @@ class Task(Base):
         """Check if task is overdue"""
         if not self.due_date:
             return False
-        return self.due_date < datetime.now(timezone.utc) and self.status != TaskStatus.COMPLETED
+        return (
+            self.due_date < datetime.now(timezone.utc)
+            and self.status != TaskStatus.COMPLETED
+        )
 
     def __repr__(self) -> str:
         return f'<Task(id={self.id}, title="{self.title}", status={self.status})>'
