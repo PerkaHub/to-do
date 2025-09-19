@@ -10,6 +10,10 @@ class Settings(BaseSettings):
     DB_NAME: str
     ASYNC_DB_DRIVER: str
 
+    EXPIRES_AT_ACCESS_TOKEN: int
+    SECRET_KEY: str
+    ALGORITHM: str
+
     @property
     def ASYNC_DATABASE_URL(self):
         return (

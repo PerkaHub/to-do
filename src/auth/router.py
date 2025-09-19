@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_db_session
 from src.auth.service import UserService
-from src.auth.schemas import RegisterUser
+from src.auth.schemas import UserAuth
+from src.auth.utils import set_token_cookies
 
 
 router = APIRouter(
@@ -14,20 +15,32 @@ router = APIRouter(
 
 @router.post('/register')
 async def register_user(
-    user_data: RegisterUser,
+    response: Response,
+    user_data: UserAuth,
     session: AsyncSession = Depends(get_db_session),
 ):
-    await UserService.register_user(
+    access_token = await UserService.register_user(
         email=user_data.email,
         password=user_data.password,
         session=session
     )
-    return None
+    set_token_cookies(response, access_token)
+    return {'access_token': access_token}
 
 
 @router.post('/login')
-async def login_user():
-    pass
+async def login_user(
+    response: Response,
+    user_data: UserAuth,
+    session: AsyncSession = Depends(get_db_session),
+):
+    access_token = await UserService.login_user(
+        email=user_data.email,
+        password=user_data.password,
+        session=session
+    )
+    set_token_cookies(response, access_token)
+    return {'access_token': access_token}
 
 
 @router.patch('/password')
