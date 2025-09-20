@@ -1,4 +1,3 @@
-from enum import Enum
 from datetime import datetime, timezone
 
 from sqlalchemy import ForeignKey, Enum as SQLEnum
@@ -6,18 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from src.database import Base
-
-
-class TaskPriority(Enum):
-    LOW = 'low'
-    MEDIUM = 'medium'
-    HIGH = 'high'
-
-
-class TaskStatus(Enum):
-    IN_PROGRESS = "in_progress"
-    COMPLETED = "completed"
-    CANCELLED = "cancelled"
+from src.tasks.enums import TaskPriority, TaskStatus
 
 
 class Task(Base):
