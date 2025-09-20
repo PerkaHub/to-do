@@ -1,7 +1,7 @@
 from src.settings import settings
 
 
-async def set_token_cookies(response, access_token):
+def set_token_cookies(response, access_token):
     response.set_cookie(
         key='access_token',
         value=access_token,
